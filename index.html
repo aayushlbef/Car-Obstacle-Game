@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Racer 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <div id="ui-layer">
+        <div class="score-board">Score: <span id="score">0</span></div>
+        <div class="level-indicator">Level: <span id="level">1</span></div>
+        <div class="speed-indicator">Speed: <span id="speed">100</span> km/h</div>
+
+        <div id="level-up-flash" class="hidden">LEVEL UP!</div>
+
+        <div id="start-screen" class="overlay">
+            <h1>NEON RACER 3D</h1>
+            <p>Use <span class="key">←</span> <span class="key">→</span> to move</p>
+            <button id="start-btn">Start Engine</button>
+        </div>
+
+        <div id="game-over-screen" class="overlay hidden">
+            <h1>CRASHED!</h1>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button id="restart-btn">Try Again</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
