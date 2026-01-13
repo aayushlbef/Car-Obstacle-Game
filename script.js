@@ -535,14 +535,57 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+// Keyboard Controls
 document.addEventListener('keydown', (e) => {
     if (!gameActive) return;
     if (e.key === 'ArrowLeft' || e.key === 'a') {
-        if (currentLane > 0) { currentLane--; AudioManager.playMoveSound(); }
+        moveLeft();
     } else if (e.key === 'ArrowRight' || e.key === 'd') {
-        if (currentLane < 2) { currentLane++; AudioManager.playMoveSound(); }
+        moveRight();
     }
 });
+
+// Touch Controls
+// Touch Controls (Swipe + Tap)
+let touchStartX = 0;
+let touchStartY = 0;
+
+document.addEventListener('touchstart', (e) => {
+    if (!gameActive) return;
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+}, { passive: false });
+
+document.addEventListener('touchend', (e) => {
+    if (!gameActive) return;
+    const touchEndX = e.changedTouches[0].screenX;
+    const touchEndY = e.changedTouches[0].screenY;
+
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+
+    // Swipe Threshold (30px)
+    if (Math.abs(dx) > 30) {
+        // Horizontal Swipe
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx > 0) moveRight();
+            else moveLeft();
+        }
+    } else {
+        // Tap (Fallback to Zone)
+        const halfWidth = window.innerWidth / 2;
+        if (touchEndX < halfWidth) moveLeft();
+        else moveRight();
+    }
+}, { passive: false });
+
+function moveLeft() {
+    if (currentLane > 0) { currentLane--; AudioManager.playMoveSound(); }
+}
+
+function moveRight() {
+    if (currentLane < 2) { currentLane++; AudioManager.playMoveSound(); }
+}
 
 // --- Audio Manager ---
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();

@@ -17,6 +17,31 @@ body {
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    touch-action: none;
+    /* Prevent scroll/zoom on mobile */
+    user-select: none;
+}
+
+/* Responsive Text for Mobile */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .score-board,
+    .speed-indicator,
+    .level-indicator {
+        font-size: 1rem;
+    }
+
+    #level-up-flash {
+        font-size: 3rem;
+    }
+
+    .overlay input {
+        width: 80%;
+        font-size: 1rem;
+    }
 }
 
 #game-container {
