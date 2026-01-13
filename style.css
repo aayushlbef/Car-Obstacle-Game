@@ -185,6 +185,34 @@ button:hover {
     transform: scale(1.05);
 }
 
+#mobile-warning {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    text-align: center;
+    background: rgba(255, 0, 85, 0.8);
+    border: 1px solid #ff0055;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    z-index: 200;
+    pointer-events: none;
+    animation: fadeOut 5s forwards;
+    animation-delay: 3s;
+    /* Wait 3s then fade out */
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
 /* --- Social Features --- */
 
 /* User Icon */
