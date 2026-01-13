@@ -82,6 +82,8 @@ body {
 .level-indicator {
     left: auto;
     right: 20px;
+    top: 80px;
+    /* Moved down to avoid User Icon */
     color: #ffd700;
     border-color: #ffd700;
     text-shadow: 0 0 10px #ffd700;

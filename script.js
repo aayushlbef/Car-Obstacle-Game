@@ -69,9 +69,19 @@ function init() {
     scene.background = new THREE.Color(0x050510);
     scene.fog = new THREE.Fog(0x050510, 20, 150);
 
-    // Camera
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 5, 10);
+    // Camera (Dynamic FOV for Speed Feel)
+    // On mobile (portrait), we need a wider FOV to see more and feel faster
+    const isMobile = window.innerWidth < window.innerHeight;
+    const fov = isMobile ? 80 : 60;
+
+    camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    if (isMobile) {
+        camera.position.set(0, 4, 12); // Slightly lower and further back on mobile
+    } else {
+        camera.position.set(0, 5, 10);
+    }
+
     camera.lookAt(0, 0, -10);
 
     // Renderer
@@ -531,6 +541,14 @@ function animate(time) {
 }
 
 function onWindowResize() {
+    const isMobile = window.innerWidth < window.innerHeight;
+    camera.fov = isMobile ? 80 : 60;
+    if (isMobile) {
+        camera.position.set(0, 4, 12);
+    } else {
+        camera.position.set(0, 5, 10);
+    }
+
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
