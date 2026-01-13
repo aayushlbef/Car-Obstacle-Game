@@ -386,6 +386,10 @@ function spawnObstacle() {
 function startGame() {
     startScreen.classList.add('hidden');
     gameOverScreen.classList.add('hidden');
+    // Hide mobile warning on start
+    const mw = document.getElementById('mobile-warning');
+    if (mw) mw.style.setProperty('display', 'none', 'important');
+
     gameActive = true;
     score = 0;
     speed = 0.25; // 50 km/h
