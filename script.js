@@ -406,6 +406,15 @@ function gameOver() {
     gameOverScreen.classList.remove('hidden');
     AudioManager.stopMusic();
     AudioManager.playCrashSound();
+
+    // Crash Effects
+    createExplosion(player.position);
+    shakeIntensity = 2.0;
+
+    // Save Score (Firebase)
+    if (typeof saveHighScore === 'function') {
+        saveHighScore(score);
+    }
 }
 
 function checkLevelUp() {

@@ -9,11 +9,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth.js" defer></script>
+    <script src="leaderboard.js" defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div id="game-container"></div>
+
+    <div id="user-icon" class="user-icon">👤</div>
 
     <div id="ui-layer">
         <div class="score-board">Score: <span id="score">0</span></div>
@@ -26,12 +37,31 @@
             <h1>NEON RACER 3D</h1>
             <p>Use <span class="key">←</span> <span class="key">→</span> to move</p>
             <button id="start-btn">Start Engine</button>
+            <button id="leaderboard-btn" style="margin-top: 10px; font-size: 1rem;">🏆 Leaderboard</button>
         </div>
 
         <div id="game-over-screen" class="overlay hidden">
             <h1>CRASHED!</h1>
             <p>Final Score: <span id="final-score">0</span></p>
             <button id="restart-btn">Try Again</button>
+            <button id="leaderboard-btn-over" style="margin-top: 10px; font-size: 1rem;">🏆 Leaderboard</button>
+        </div>
+
+        <!-- Username Selection Modal -->
+        <div id="username-modal" class="overlay hidden">
+            <h2>Select Username</h2>
+            <input type="text" id="username-input" placeholder="Enter unique username" maxlength="15">
+            <button id="save-username-btn">Save & Race</button>
+            <p id="username-error" class="error-text"></p>
+        </div>
+
+        <!-- Leaderboard Screen -->
+        <div id="leaderboard-screen" class="overlay hidden">
+            <h2 style="color: #00f3ff; text-shadow: 0 0 10px #00f3ff;">🏆 LEADERBOARD</h2>
+            <div id="leaderboard-list">
+                <!-- Rows injected via JS -->
+            </div>
+            <button id="close-leaderboard-btn" style="margin-top: 20px;">Close</button>
         </div>
     </div>
 
