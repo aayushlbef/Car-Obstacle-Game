@@ -330,3 +330,36 @@ button:hover {
     text-align: left;
     padding-left: 20px;
 }
+
+#pause-btn {
+    position: absolute;
+    top: 20px;
+    right: 80px; /* Left of User Icon (which is at right: 20px) */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--neon-blue);
+    color: #fff;
+    cursor: pointer;
+    z-index: 100;
+    margin-top: 0; /* Reset default button margin */
+}
+
+#pause-btn:hover {
+    background: var(--neon-blue);
+    color: #000;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--neon-blue);
+}
+
+/* Pause Screen Specifics */
+#pause-screen h1 {
+    color: #ffd700; /* Gold */
+    text-shadow: 0 0 20px #ffd700;
+}

@@ -7,9 +7,13 @@ const gameOverScreen = document.getElementById('game-over-screen');
 const levelUpFlash = document.getElementById('level-up-flash');
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
+const pauseBtn = document.getElementById('pause-btn');
+const pauseScreen = document.getElementById('pause-screen');
+const resumeBtn = document.getElementById('resume-btn');
 
 // Game State
 let gameActive = false;
+let isPaused = false;
 let score = 0;
 let speed = 0.25;
 let currentLevel = 1;
@@ -390,7 +394,10 @@ function startGame() {
     const mw = document.getElementById('mobile-warning');
     if (mw) mw.style.setProperty('display', 'none', 'important');
 
+    pauseBtn.classList.remove('hidden'); // Show pause button
+
     gameActive = true;
+    isPaused = false;
     score = 0;
     speed = 0.25; // 50 km/h
     currentLevel = 1;
@@ -429,6 +436,7 @@ function gameOver() {
     if (typeof saveHighScore === 'function') {
         saveHighScore(score);
     }
+    pauseBtn.classList.add('hidden'); // Hide pause button on game over
 }
 
 function checkLevelUp() {
@@ -474,6 +482,8 @@ function checkLevelUp() {
 function animate(time) {
     if (!gameActive) return;
     requestAnimationFrame(animate);
+
+    if (isPaused) return; // Skip updates if paused
 
     // Move Player Smoothly
     player.position.x += (LANE_POSITIONS[currentLane] - player.position.x) * 0.1;
@@ -564,8 +574,31 @@ document.addEventListener('keydown', (e) => {
         moveLeft();
     } else if (e.key === 'ArrowRight' || e.key === 'd') {
         moveRight();
+    } else if (e.key === ' ' || e.code === 'Space') {
+        togglePause();
     }
 });
+
+function togglePause() {
+    if (!gameActive || startScreen.classList.contains('hidden') === false || gameOverScreen.classList.contains('hidden') === false) return;
+
+    isPaused = !isPaused;
+
+    if (isPaused) {
+        pauseScreen.classList.remove('hidden');
+        AudioManager.pauseAll();
+    } else {
+        pauseScreen.classList.add('hidden');
+        AudioManager.resumeAll();
+    }
+}
+
+pauseBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent touch/click conflict
+    togglePause();
+});
+
+resumeBtn.addEventListener('click', togglePause);
 
 // Touch Controls
 // Touch Controls (Swipe + Tap)
@@ -702,6 +735,14 @@ const AudioManager = {
     stopMusic: function () {
         this.musicPlaying = false;
         if (this.musicInterval) clearInterval(this.musicInterval);
+    },
+
+    pauseAll: function () {
+        if (audioCtx.state === 'running') audioCtx.suspend();
+    },
+
+    resumeAll: function () {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 };
 
