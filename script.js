@@ -418,7 +418,7 @@ function startGame() {
 
     AudioManager.startMusic();
     lastTime = performance.now();
-    animate();
+    requestAnimationFrame(animate);
 }
 
 function gameOver() {
@@ -486,8 +486,9 @@ function animate(time) {
     if (isPaused) return; // Skip updates if paused
 
     // Frame-independent timing (normalized to 60 fps)
-    const delta = Math.min((time - lastTime) / 1000, 0.1);
-    lastTime = time;
+    const frameTime = time ?? performance.now();
+    const delta = Math.min((frameTime - lastTime) / 1000, 0.1);
+    lastTime = frameTime;
     const frameScale = delta * 60;
 
     // Move Player Smoothly
