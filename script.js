@@ -485,12 +485,18 @@ function animate(time) {
 
     if (isPaused) return; // Skip updates if paused
 
+    // Frame-independent timing (normalized to 60 fps)
+    const delta = Math.min((time - lastTime) / 1000, 0.1);
+    lastTime = time;
+    const frameScale = delta * 60;
+
     // Move Player Smoothly
-    player.position.x += (LANE_POSITIONS[currentLane] - player.position.x) * 0.1;
+    const playerSmooth = 1 - Math.pow(0.9, frameScale);
+    player.position.x += (LANE_POSITIONS[currentLane] - player.position.x) * playerSmooth;
     player.rotation.z = (player.position.x - LANE_POSITIONS[currentLane]) * 0.1;
 
     // Move Road
-    roadSegments.forEach(s => s.position.z += speed);
+    roadSegments.forEach(s => s.position.z += speed * frameScale);
 
     if (roadSegments[0].position.z > 15) {
         const first = roadSegments.shift();
@@ -501,7 +507,7 @@ function animate(time) {
 
     // Move City (Infinite Scroll)
     cityChunks.forEach(chunk => {
-        chunk.position.z += speed * 0.5; // Parallax speed
+        chunk.position.z += speed * 0.5 * frameScale; // Parallax speed
         if (chunk.position.z > 200) { // If processed through camera
             chunk.position.z -= 1000; // Move back: 2 segments * 500 length
         }
@@ -511,7 +517,7 @@ function animate(time) {
     if (rainSystem) {
         const positions = rainSystem.geometry.attributes.position.array;
         for (let i = 1; i < positions.length; i += 3) {
-            positions[i] -= 2; // Fall down
+            positions[i] -= 2 * frameScale; // Fall down
             if (positions[i] < -10) positions[i] = 200; // Reset height
         }
         rainSystem.geometry.attributes.position.needsUpdate = true;
@@ -525,14 +531,14 @@ function animate(time) {
     if (currentLevel >= 3) spawnChance += 0.01;
     if (currentLevel >= 6) spawnChance += 0.01;
 
-    if (Math.random() < spawnChance) {
+    if (Math.random() < spawnChance * frameScale) {
         if (obstacles.length === 0 || obstacles[obstacles.length - 1].mesh.position.z > -60) {
             spawnObstacle();
         }
     }
 
     obstacles.forEach((obs, index) => {
-        obs.mesh.position.z += speed;
+        obs.mesh.position.z += speed * frameScale;
         // Collision
         const dx = Math.abs(player.position.x - obs.mesh.position.x);
         const dz = Math.abs(player.position.z - obs.mesh.position.z);
@@ -548,7 +554,7 @@ function animate(time) {
     });
 
     // Continuous subtle speed increase
-    speed += 0.0001;
+    speed += 0.0001 * frameScale;
     speedElement.innerText = Math.floor(speed * 200);
 
     renderer.render(scene, camera);
@@ -590,6 +596,7 @@ function togglePause() {
     } else {
         pauseScreen.classList.add('hidden');
         AudioManager.resumeAll();
+        lastTime = performance.now();
     }
 }
 
